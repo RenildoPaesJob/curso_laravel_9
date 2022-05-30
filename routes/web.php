@@ -15,5 +15,8 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
+//editar usuario
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 //rota com a passagem de um parametro
 Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');

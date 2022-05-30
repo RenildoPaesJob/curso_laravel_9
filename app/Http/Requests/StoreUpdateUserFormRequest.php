@@ -13,6 +13,7 @@ class StoreUpdateUserFormRequest extends FormRequest
      */
     public function authorize()
     {
+        // return false; //padrão
         return true;
     }
 
@@ -21,25 +22,33 @@ class StoreUpdateUserFormRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
-    {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'min:3'
-            ],
+    public function rules(){
+
+        $id = $this->id ?? '';
+        // dd($id);
+
+        $rules = [
+            'name' => 'required|string|max:255|min:3',
             'email' => [
                 'required',
                 'email',
-                'unique:users'
+                "unique:users,email,{$id},id"
             ],
             'password' =>[
                 'required',
-                'min:8',
+                'min:6',
                 'max:15'
             ]
         ];
+
+        if ($this->method('PUT')) {
+            $rules['password'] = [
+                'nullable',
+                'min:6',
+                'max:15'
+            ];
+        }
+
+        return $rules; 
     }
 }

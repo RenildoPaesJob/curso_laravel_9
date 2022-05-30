@@ -11,8 +11,9 @@
    <ul>
       @foreach ($users as $user)
          <li>
-            {{ $user->name }} - {{ $user->email }} |
-            <a href="{{ route('users.show', ['id' => $user->id]) }}">Detalhes</a>
+            {{ $user->name }} - {{ $user->email }} 
+            | <a href="{{ route('users.edit', ['id' => $user->id]) }}">Editar</a>
+            | <a href="{{ route('users.show', ['id' => $user->id]) }}">Detalhes</a>
          </li>
       @endforeach
    </ul>

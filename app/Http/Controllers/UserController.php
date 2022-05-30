@@ -18,7 +18,7 @@ class UserController extends Controller
       // return view('users/index', [
       //    'users' => $users
       // ]);
-      return view('users/index', compact('users'));//compact = cria um array dinâmico
+      return view('users.index', compact('users'));//compact = cria um array dinâmico
    }
 
    public function show($id){
@@ -41,10 +41,10 @@ class UserController extends Controller
    
    public function store(StoreUpdateUserFormRequest $request){
       //como tem que criptografar a senha fica assim
-      $data = $request->all();
+      $data = $request->all();//pegar todas as info. do id passado pelo request
       $data['password'] = bcrypt($request->password);
 
-      $user = User::create($data);
+      User::create($data);
 
       // return redirect()->route('users.show', $user->id);
       return redirect()->route('users.index');
@@ -70,5 +70,38 @@ class UserController extends Controller
       // ]));
 
       // return view('users.create');
+   }
+
+   public function edit($id){
+      if (!$user = User::find($id)) {
+         return redirect()->route('users.index');
+      }
+
+      return view('users.edit', compact('user'));
+   }
+   
+   public function update(StoreUpdateUserFormRequest $request, $id){
+      if (!$user = User::find($id)){
+         return redirect()->route('users.index');
+      }
+      /**validação, campo por campo*/
+      // $user->name = $request->name;
+      // $user->name = $request->get('name');
+      // $user->save();
+
+      /**validação, no padrão Laravel */
+      // $user->update($request->all()); or
+      // $data = $request->all();
+      $data = $request->only('name', 'email');
+
+      if ($request->password) {
+         $data['password'] = bcrypt($request->password);
+      }
+
+      $user->update($data);
+      return redirect()->route('users.index');
+
+      // dd($request->all());
+      // return view('users.edit', compact('user'));
    }
 }

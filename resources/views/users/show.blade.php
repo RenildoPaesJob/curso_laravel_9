@@ -10,4 +10,5 @@
          {{ $user->name }} - {{ $user->email }}
       </li>
    </ul>
+   <a href="{{ route('users.index') }}">voltar</a>
 @endsection
