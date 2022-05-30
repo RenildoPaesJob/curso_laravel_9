@@ -104,4 +104,13 @@ class UserController extends Controller
       // dd($request->all());
       // return view('users.edit', compact('user'));
    }
+
+   public function destroy($id){
+      if (!$user = User::find($id)){
+         return redirect()->route('users.index');
+      }
+      // dd($user);
+      $user->delete();
+      return redirect()->route('users.index');
+   }
 }
