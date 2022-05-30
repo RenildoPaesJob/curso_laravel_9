@@ -8,16 +8,24 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-   public function index(){
+   public function index(Request $request){
       // dd('UserController@index');
       // $users = User::all();
-      $users = User::get();
+      // $users = User::get();
       // dd($users);
-
+      
       // return view('users/index');
       // return view('users/index', [
-      //    'users' => $users
-      // ]);
+         //    'users' => $users
+         // ]);
+      // $users = User::where('name', 'LIKE', "%{$request->search}%")->get();
+      $search = $request->search;
+      $users = User::where(function ($query) use ($search){
+         if ($search) {
+            $query->where('name', 'LIKE', "%{$search}%");
+            $query->orWhere('email', $search);
+         }
+      })->get();
       return view('users.index', compact('users'));//compact = cria um array dinâmico
    }
 
