@@ -8,32 +8,39 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+   protected $model;
+
+   public function __construct(User $user)
+   {
+      $this->model = $user;
+   }
    public function index(Request $request){
       // dd('UserController@index');
-      // $users = User::all();
-      // $users = User::get();
+      // $users =$this->model->all();
+      // $users =$this->model->get();
       // dd($users);
       
       // return view('users/index');
       // return view('users/index', [
          //    'users' => $users
          // ]);
-      // $users = User::where('name', 'LIKE', "%{$request->search}%")->get();
-      $search = $request->search;
-      $users = User::where(function ($query) use ($search){
-         if ($search) {
-            $query->where('name', 'LIKE', "%{$search}%");
-            $query->orWhere('email', $search);
-         }
-      })->get();
+      // $users =$this->model->where('name', 'LIKE', "%{$request->search}%")->get();
+
+      // $users = $this->model
+                           //->getUsers(
+                           //   search: $request->get('search', '')
+                           //);
+      $users = $this->model->getUsers(search: $request->search);
+
       return view('users.index', compact('users'));//compact = cria um array dinâmico
    }
 
    public function show($id){
       // dd('UserController@show', $id);
-      // $user = User::where('id', $id)->first();
-      // $user = User::find($id);
-      if (!$user = User::find($id)) {
+      // $user =$this->model->where('id', $id)->first();
+      // $user =$this->model->find($id);
+      if (!$user =$this->model->find($id)) {
          // return redirect()->route('users.index');
          return back();
       }
@@ -52,7 +59,7 @@ class UserController extends Controller
       $data = $request->all();//pegar todas as info. do id passado pelo request
       $data['password'] = bcrypt($request->password);
 
-      User::create($data);
+     $this->model->create($data);
 
       // return redirect()->route('users.show', $user->id);
       return redirect()->route('users.index');
@@ -81,7 +88,7 @@ class UserController extends Controller
    }
 
    public function edit($id){
-      if (!$user = User::find($id)) {
+      if (!$user =$this->model->find($id)) {
          return redirect()->route('users.index');
       }
 
@@ -89,7 +96,7 @@ class UserController extends Controller
    }
    
    public function update(StoreUpdateUserFormRequest $request, $id){
-      if (!$user = User::find($id)){
+      if (!$user =$this->model->find($id)){
          return redirect()->route('users.index');
       }
       /**validação, campo por campo*/
@@ -114,7 +121,7 @@ class UserController extends Controller
    }
 
    public function destroy($id){
-      if (!$user = User::find($id)){
+      if (!$user =$this->model->find($id)){
          return redirect()->route('users.index');
       }
       // dd($user);
